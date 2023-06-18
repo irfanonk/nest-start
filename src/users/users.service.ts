@@ -15,9 +15,17 @@ export class UsersService {
       name: 'Second',
       email: 'second@email.com',
     },
+    {
+      id: 3,
+      name: 'First',
+      email: 'third@email.com',
+    },
   ];
 
-  finAll() {
+  finAll(name?: string) {
+    if (name) {
+      return this.users.filter((user) => user.name === name);
+    }
     return this.users;
   }
 
