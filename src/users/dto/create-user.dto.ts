@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Validate } from 'class-validator';
 import { IsAlphanumeric, IsEmail, IsNumber, MaxLength } from 'class-validator';
+import { Unique } from 'typeorm';
 
 export class CreateUserDto {
   @ApiProperty()
@@ -9,6 +11,7 @@ export class CreateUserDto {
 
   @ApiProperty()
   @IsEmail()
+  @Validate(Unique)
   email: string;
 
   @ApiProperty({ required: false })

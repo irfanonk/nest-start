@@ -19,31 +19,27 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
+
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @ApiOkResponse({ type: User, isArray: true })
   @ApiQuery({ name: 'name', required: false })
   @Get()
-  getUsers(@Query('name') name?: string): User[] {
-    return this.usersService.finAll(name);
+  async getAllUsers(@Query('name') name?: string): Promise<User[]> {
+    return await this.usersService.getAllUsers(name);
   }
   @ApiOkResponse({ type: User, description: 'returns single user' })
   @ApiNotFoundResponse()
   @Get(':id')
-  getUserById(@Param('id', ParseIntPipe) id: number): User {
-    const user = this.usersService.findById(id);
-
-    if (!user) {
-      throw new NotFoundException();
-    }
-    return user;
+  getUserById(@Param('id', ParseIntPipe) id: number): Promise<User> {
+    return this.usersService.findUserById(id);
   }
   @ApiCreatedResponse({ type: User })
   @Post()
-  createUser(@Body() body: CreateUserDto): User {
+  createUser(@Body() body: CreateUserDto): Promise<User> {
     return this.usersService.createUser(body);
   }
 }
