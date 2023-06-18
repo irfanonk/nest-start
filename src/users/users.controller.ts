@@ -8,11 +8,11 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
   @Get()
   getUsers(): any {
-    return [{ id: 0 }];
+    return this.usersService.finAll();
   }
   @Get(':id')
   getUserById(@Param('id') id: string): any {
-    return { id };
+    return this.usersService.findById(+id);
   }
   @Post()
   createUser(@Body() body: CreateUserDto): User {
