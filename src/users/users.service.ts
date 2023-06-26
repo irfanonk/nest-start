@@ -11,18 +11,16 @@ export class UsersService {
   ) {}
 
   async getAllUsers(name?: string): Promise<User[]> {
-    // if (name) {
-    //   return this.userRepository.filter((user) => user.name === name);
-    // }
-    const users = await this.userRepository.find({});
-    console.log('UsersService  getAllUsers  users:', users);
-    return users;
+    if (name) {
+      return await this.userRepository.find({ where: { name } });
+    }
+    return await this.userRepository.find({});
   }
 
   async findUserById(id: any): Promise<User> {
     try {
       const user = await this.userRepository.findOne({ where: { id } });
-      console.log('UsersService  findUserById  user:', user);
+
       return user;
     } catch (error) {
       throw new NotFoundException();
@@ -33,7 +31,7 @@ export class UsersService {
     const newUser = this.userRepository.create(body);
 
     const result = await this.userRepository.save(newUser);
-    console.log('UsersService  createUser  result:', result);
+
     return result;
   }
 }
