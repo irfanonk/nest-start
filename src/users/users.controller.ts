@@ -25,6 +25,20 @@ import {
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @ApiOkResponse({ type: String, description: 'erases all data' })
+  @Get('/clear')
+  async clearData() {
+    await this.usersService.clear();
+    return 'Cleaned';
+  }
+
+  @ApiOkResponse({ type: String, description: 'creates mock data' })
+  @Get('/mock')
+  async createMockData() {
+    await this.usersService.seed();
+    return 'Created';
+  }
+
   @ApiOkResponse({ type: User, isArray: true })
   @ApiQuery({ name: 'name', required: false })
   @Get()
