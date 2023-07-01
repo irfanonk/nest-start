@@ -11,11 +11,10 @@ import {
 import { ContactInfo } from './contact.entity';
 import { Task } from './task.entity';
 import { Meeting } from './meeting.entity';
+import { AbstractEntity } from 'src/entities/abstract.entitty';
 
 @Entity('user')
-export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: number;
+export class User extends AbstractEntity {
   @Column()
   name: string;
 
