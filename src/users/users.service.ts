@@ -17,6 +17,14 @@ export class UsersService {
     @InjectRepository(Task) private taskRepository: Repository<Task>,
   ) {}
 
+  relations: string[] = [
+    'contactInfo',
+    'manager',
+    'directReports',
+    'tasks',
+    'meetings',
+  ];
+
   async clear() {
     await this.userRepository.clear();
     await this.taskRepository.clear();
@@ -37,6 +45,18 @@ export class UsersService {
       manager: ceo,
     });
 
+    for (let index = 0; index < 900; index++) {
+      const newUser = this.userRepository.create({ name: 'user' + index });
+      await this.userRepository.insert(newUser);
+
+      const userContact = this.contactInfoRepository.create({
+        email: 'user' + index + '@email.com',
+        address: index + 'street',
+      });
+      userContact.user = newUser;
+      await this.contactInfoRepository.save(userContact);
+    }
+
     const task1 = this.taskRepository.create({ name: 'First task' });
     await this.taskRepository.save(task1);
     const task2 = this.taskRepository.create({ name: 'Second task' });
@@ -54,20 +74,13 @@ export class UsersService {
   }
 
   async getAllUsers(name?: string): Promise<User[]> {
-    const relations = [
-      'contactInfo',
-      'manager',
-      'directReports',
-      'tasks',
-      'meetings',
-    ];
     if (name) {
       return await this.userRepository.find({
         where: { name },
-        relations,
+        relations: this.relations,
       });
     }
-    return await this.userRepository.find({ relations });
+    return await this.userRepository.find({ relations: this.relations });
   }
 
   async findUserById(id: any): Promise<User> {
